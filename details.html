@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Leave Details</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f4f9;
+            color: #333;
+        }
+
+        header {
+            background: #243b55;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        nav {
+            background: #141e30;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: #3498db;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 40px auto;
+        }
+
+        .box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px #ccc;
+        }
+
+        .box h2 {
+            color: #243b55;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #243b55;
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f1f4f9;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        #noData {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+        }
+
+        footer {
+            background: #243b55;
+            color: white;
+            text-align: center;
+            padding: 18px;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 800px) {
+            .box {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 900px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Employee Leave Management System</h1>
+    <p>Manage Employee Leave Requests Easily</p>
+</header>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="apply.html">Apply Leave</a>
+    <a href="details.html" class="active">Leave Details</a>
+    <a href="about.html">About</a>
+</nav>
+
+<div class="container">
+
+    <div class="box">
+
+        <h2>Employee Leave Details</h2>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Employee ID</th>
+                    <th>Employee Name</th>
+                    <th>Email</th>
+                    <th>Leave Date</th>
+                    <th>Days</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="leaveTableBody">
+            </tbody>
+
+        </table>
+
+        <p id="noData">No leave records found.</p>
+
+    </div>
+
+</div>
+
+<footer>
+    <p>Employee Leave Management System | All Rights Reserved</p>
+</footer>
+
+
+<script>
+
+function displayLeaves() {
+
+    let leaves =
+        JSON.parse(localStorage.getItem("leaveRecords")) || [];
+
+    let tableBody =
+        document.getElementById("leaveTableBody");
+
+    let noData =
+        document.getElementById("noData");
+
+    tableBody.innerHTML = "";
+
+    if (leaves.length === 0) {
+        noData.style.display = "block";
+        return;
+    }
+
+    noData.style.display = "none";
+
+    leaves.forEach(function(leave, index) {
+
+        let row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${leave.employeeId}</td>
+            <td>${leave.employeeName}</td>
+            <td>${leave.email}</td>
+            <td>${leave.leaveDate}</td>
+            <td>${leave.days}</td>
+            <td>${leave.description}</td>
+
+            <td>
+                <button
+                    class="delete-btn"
+                    onclick="deleteLeave(${index})">
+                    Delete
+                </button>
+            </td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+}
+
+
+function deleteLeave(index) {
+
+    let leaves =
+        JSON.parse(localStorage.getItem("leaveRecords")) || [];
+
+    leaves.splice(index, 1);
+
+    localStorage.setItem(
+        "leaveRecords",
+        JSON.stringify(leaves)
+    );
+
+    displayLeaves();
+}
+
+
+displayLeaves();
+
+</script>
+
+</body>
+</html>
